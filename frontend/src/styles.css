@@ -51,12 +51,17 @@ textarea {
   scrollbar-color: var(--ink) var(--sb-bg); /* Firefox */
 }
 
-.history,
-.table-wrap {
-  scrollbar-width: thin;
+/* Firefox only. In Chromium 121+ any scrollbar-width other than auto switches the ::-webkit-scrollbar styling
+   off, which left the sidebar and tables with the browser's own bars. */
+@supports not selector(::-webkit-scrollbar) {
+  .history ul,
+  .table-wrap {
+    scrollbar-width: thin;
+  }
 }
 
-textarea {
+textarea,
+.history {
   --sb-bg: var(--sheet);
 }
 
@@ -73,7 +78,7 @@ textarea {
     height: 14px;
   }
 
-  .history::-webkit-scrollbar,
+  .history ul::-webkit-scrollbar,
   .table-wrap::-webkit-scrollbar,
   textarea::-webkit-scrollbar {
     width: 10px;
@@ -97,7 +102,7 @@ textarea {
     border: 3px solid var(--sb-bg);
   }
 
-  .history::-webkit-scrollbar-thumb,
+  .history ul::-webkit-scrollbar-thumb,
   .table-wrap::-webkit-scrollbar-thumb,
   textarea::-webkit-scrollbar-thumb {
     border-width: 2px;
@@ -130,9 +135,25 @@ textarea {
   white-space: nowrap;
 }
 
+/* the app fills the window; the chat and the knowledge base scroll inside it, so the page itself never does */
+.app {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+}
+
+.app > main {
+  min-height: 0;
+}
+
+.page-scroll {
+  overflow-y: auto;
+}
+
 .wrap {
   width: 100%;
-  max-width: 1240px; /* the widest page (chat with its sidebar), so the masthead lines up with it */
+  max-width: 980px;
   margin: 0 auto;
   padding: 0 16px;
 }
@@ -153,16 +174,16 @@ textarea {
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  padding-top: 18px;
+  padding: 12px 16px 0;
 }
 
 .wordmark {
   font-family: var(--stencil);
-  font-size: 1.7rem;
+  font-size: 1.55rem;
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--sheet);
-  padding-bottom: 12px;
+  padding-bottom: 10px;
 }
 
 .masthead nav {
@@ -195,36 +216,69 @@ textarea {
   outline-color: var(--yellow);
 }
 
-/* ---------- hero ---------- */
-.chat-layout {
-  --side: 250px;
-  --gap: 44px;
-  display: grid;
-  grid-template-columns: var(--side) minmax(0, 1fr);
-  grid-template-areas: "side main";
-  column-gap: var(--gap);
-  align-items: start;
-  max-width: 1240px;
-  padding-top: 40px;
+/* ---------- chat shell: sidebar | (top bar, scrolling thread, composer), the thread centred in its pane ---------- */
+.chat-shell {
+  --side: 280px;
+  --col: 840px; /* the reading column, shared by the thread and the composer so they line up */
+  position: relative;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chat-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-bar {
+  flex: none;
+  padding: 10px 16px 0;
+}
+
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges; /* the same space on both sides, so the thread stays centred over the composer */
 }
 
 .thread {
-  grid-area: main;
-  max-width: 980px;
-  padding-bottom: 150px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  max-width: calc(var(--col) + 32px);
+  margin: 0 auto;
+  padding: 16px 16px 32px;
 }
 
-/* ---------- past chats ---------- */
+/* ---------- past chats: a full-height sidebar that slides away ---------- */
 .history {
-  grid-area: side;
-  position: sticky;
-  top: 24px;
-  max-height: calc(100vh - 230px);
-  overflow-y: auto;
-  padding-bottom: 8px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: var(--side);
+  margin-left: calc(var(--side) * -1);
+  padding: 14px 14px 0;
+  background: var(--sheet);
+  border-right: 2px solid var(--ink);
+  visibility: hidden;
+  transition: margin-left 220ms ease, visibility 0s 220ms;
+}
+
+.history-open {
+  margin-left: 0;
+  visibility: visible;
+  transition: margin-left 220ms ease, visibility 0s;
 }
 
 .history ul {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   list-style: none;
   margin: 14px 0 0;
   padding: 0;
@@ -318,23 +372,63 @@ textarea {
 }
 
 .history-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 12px 0 10px;
+  background: var(--sheet);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.history-toggle:hover {
+  background: var(--yellow);
+}
+
+/* three ruled lines; the top and bottom ones close in when the sidebar is open */
+.burger {
+  width: 18px;
+  height: 14px;
+  background: linear-gradient(var(--ink), var(--ink)) 0 0 / 100% 2px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 6px / 100% 2px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 12px / 100% 2px no-repeat;
+  transition: background-size 160ms;
+}
+
+.history-toggle[aria-expanded="true"] .burger {
+  background-size: 100% 2px, 55% 2px, 100% 2px;
+}
+
+/* the drawer's backdrop; only phones show it */
+.scrim {
   display: none;
 }
 
+.hero {
+  margin: auto 0;
+  padding: 24px 0 8px;
+  text-align: center;
+}
+
 .hero h1 {
-  margin: 0 0 20px;
-  max-width: 11ch;
+  margin: 0 auto 18px;
+  max-width: 14ch;
   font-stretch: 62%;
   font-weight: 800;
-  font-size: clamp(3rem, 11vw, 6.2rem);
-  line-height: 0.92;
+  font-size: clamp(2.8rem, 9vw, 5rem);
+  line-height: 0.94;
   letter-spacing: -0.01em;
 }
 
 .hero p {
-  max-width: 56ch;
-  margin: 0 0 32px;
-  font-size: 1.1rem;
+  max-width: 52ch;
+  margin: 0 auto 28px;
+  font-size: 1.08rem;
   color: var(--ink-soft);
 }
 
@@ -352,8 +446,8 @@ textarea {
   background: none;
   border: 0;
   border-bottom: 1px solid var(--ink);
-  text-align: left;
-  font-size: 1.2rem;
+  text-align: center;
+  font-size: 1.15rem;
   font-stretch: 85%;
   font-weight: 600;
   cursor: pointer;
@@ -371,10 +465,10 @@ textarea {
 
 .exchange h2 {
   margin: 0 0 18px;
-  max-width: 28ch;
+  max-width: 34ch;
   font-stretch: 70%;
   font-weight: 800;
-  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  font-size: clamp(1.7rem, 4.4vw, 2.4rem);
   line-height: 1.02;
 }
 
@@ -581,15 +675,6 @@ textarea {
   overflow-wrap: anywhere;
 }
 
-.notice {
-  margin: 10px 0 0;
-  padding: 12px 16px;
-  background: var(--ink);
-  color: var(--sheet);
-  font-size: 0.9rem;
-  max-width: none;
-}
-
 /* ---------- markdown inside replies ---------- */
 .md > :last-child {
   margin-bottom: 0;
@@ -705,12 +790,6 @@ textarea {
   font-size: 1.05rem;
 }
 
-.notice-quiet {
-  margin: 14px 0 0 24px;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-}
-
 .exchange-chat {
   margin-bottom: 40px;
 }
@@ -791,37 +870,46 @@ textarea {
 
 /* ---------- composer ---------- */
 .composer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 14px 0;
-  background: var(--paper);
-  border-top: 2px solid var(--ink);
+  flex: none;
+  width: 100%;
+  max-width: calc(var(--col) + 32px);
+  margin: 0 auto;
+  padding: 8px 16px 12px;
 }
 
-.composer-row {
+/* one ruled box with the Ask button set into its right edge */
+.composer-box {
   display: flex;
-  gap: 10px;
   align-items: stretch;
-  max-width: 1240px;
-  padding-left: calc(16px + 250px + 44px); /* line the box up with the thread, beside the sidebar */
+  background: var(--sheet);
+  border: 2px solid var(--ink);
+}
+
+.composer-box:focus-within {
+  background: #fffdf0;
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
 }
 
 .composer textarea {
   flex: 1;
   min-width: 0;
-  padding: 10px 12px;
-  background: var(--sheet);
-  border: 2px solid var(--ink);
+  padding: 12px 14px;
+  background: none;
+  border: 0;
   border-radius: 0;
+  outline: 0;
   resize: none;
   line-height: 1.4;
 }
 
-.composer textarea:focus-visible {
-  outline-offset: 0;
-  background: #fffdf0;
+/* the one standing notice, in place of a copy under every reply */
+.disclaimer {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  text-align: center;
 }
 
 button[type="submit"],
@@ -835,6 +923,10 @@ button[type="submit"],
   font-weight: 800;
   font-size: 1.15rem;
   cursor: pointer;
+}
+
+.composer button[type="submit"] {
+  border-width: 0 0 0 2px; /* the box already has the outer rule */
 }
 
 button[type="submit"]:hover:not(:disabled) {
@@ -970,44 +1062,40 @@ td strong {
   font-size: 1.05rem;
 }
 
-/* ---------- narrower screens: the sidebar folds into a toggle above the thread ---------- */
+/* ---------- narrower screens: the sidebar becomes a drawer over the chat ---------- */
 @media (max-width: 900px) {
-  .chat-layout {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "toggle" "side" "main";
-    padding-top: 24px;
-  }
-
-  .history-toggle {
-    grid-area: toggle;
-    display: block;
-    width: 100%;
-    min-height: 44px;
-    margin-bottom: 16px;
-    padding: 0 12px;
-    background: var(--sheet);
-    border: 2px solid var(--ink);
-    border-radius: 0;
-    text-align: left;
-    font-stretch: 75%;
-    font-weight: 700;
-    font-size: 1.05rem;
-    cursor: pointer;
-  }
-
   .history {
-    display: none;
-    position: static;
-    max-height: 50vh;
-    margin-bottom: 24px;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    max-width: 86vw;
+    margin-left: calc(min(var(--side), 86vw) * -1);
   }
 
   .history-open {
-    display: block;
+    margin-left: 0;
+    box-shadow: 6px 0 0 rgba(16, 39, 46, 0.25);
   }
 
-  .composer-row {
-    padding-left: 16px;
+  .scrim {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    padding: 0;
+    background: rgba(16, 39, 46, 0.45);
+    border: 0;
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history,
+  .history-open,
+  .burger {
+    transition: none;
   }
 }
 
@@ -1082,16 +1170,12 @@ td strong {
     margin-right: 14px;
   }
 
-  .composer-row {
-    flex-direction: column;
-  }
-
   .composer button[type="submit"] {
-    min-height: 44px;
+    padding: 0 18px;
   }
 
-  .thread {
-    padding-bottom: 210px;
+  .disclaimer {
+    font-size: 0.72rem;
   }
 
   .masthead-row {

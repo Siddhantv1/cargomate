@@ -47,6 +47,9 @@ Server rules, independent of the model:
 ## UI
 Answers render as a consignment docket (ruled form cells, rubber-stamp status marks, source chips). Admin page:
 upload, document table, delete. Container-paint palette, Archivo + stencil stamp face, no card kit.
+Chat layout: a full-height collapsible sidebar (a drawer on phones), a centred thread and composer sharing one column,
+the page itself never scrolls. The disclaimer is shown once under the composer, not inside each reply; the API still
+returns it with every answer.
 
 ## Out of scope
 Chat login, conversation persistence, live freight APIs, OCR for scanned PDFs, hosted vector DB.

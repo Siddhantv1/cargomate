@@ -32,9 +32,9 @@ describe("Docket", () => {
     expect(items.map((i) => i.textContent)).toEqual(["Commercial invoice", "Packing list"]);
   });
 
-  it("always shows the disclaimer", () => {
+  it("leaves the disclaimer to the chat footer instead of repeating it in every reply", () => {
     render(<Docket answer={answerFixture()} />);
-    expect(screen.getByText("Not legal, customs or financial advice.")).toBeInTheDocument();
+    expect(screen.queryByText("Not legal, customs or financial advice.")).toBeNull();
   });
 
   it("opens the cited source's excerpt when its name is clicked, and closes it again", async () => {
@@ -70,9 +70,9 @@ describe("Docket: dynamic shape", () => {
     expect(screen.queryByText("Sourced")).toBeNull(); // stamps belong to the docket
   });
 
-  it("keeps sources, citations and the disclaimer on a chat reply", async () => {
+  it("keeps sources and citations on a chat reply", async () => {
     render(<Docket answer={chatFixture("Sea takes 14 days.")} />);
-    expect(screen.getByText("Not legal, customs or financial advice.")).toBeInTheDocument();
+    expect(screen.queryByText("Not legal, customs or financial advice.")).toBeNull();
     await userEvent.click(screen.getAllByRole("button", { name: "hs_code__textiles_sample.csv" })[0]);
     expect(screen.getByText("6109 10 cotton T-shirts")).toBeInTheDocument();
   });

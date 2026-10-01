@@ -111,4 +111,19 @@ describe("Chat: dynamic replies", () => {
     const history = api.askChat.mock.calls[1][1];
     expect(history[1]).toEqual({ role: "assistant", content: "Answer: Sea takes 14 to 20 days." });
   });
+
+  it("shows the disclaimer once under the composer, before and after replies, not inside them", async () => {
+    api.askChat.mockResolvedValueOnce(answerFixture());
+    api.askChat.mockResolvedValueOnce(chatFixture("Sea takes 14 days."));
+    const { container } = render(<Chat />);
+    const notice = () => screen.getAllByText(/not legal, customs or financial advice/i);
+    expect(notice()).toHaveLength(1);
+    await userEvent.type(box(), "hs code{Enter}");
+    await screen.findByRole("heading", { name: "HS code" });
+    await waitFor(() => expect(box()).toBeEnabled());
+    await userEvent.type(box(), "what about sea?{Enter}");
+    await waitFor(() => expect(container.querySelector(".reply")).not.toBeNull());
+    expect(notice()).toHaveLength(1);
+    expect(notice()[0].closest("form")).toBe(box().closest("form"));
+  });
 });

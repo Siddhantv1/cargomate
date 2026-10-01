@@ -191,15 +191,47 @@ describe("Chat history", () => {
     vi.restoreAllMocks();
   });
 
-  it("offers a Past chats toggle for small screens that shows the count and opens the list", async () => {
+  it("starts with the sidebar open on a wide screen, folds it with the toggle, and keeps it open when a chat is picked", async () => {
     render(<Chat />);
-    const toggle = screen.getByRole("button", { name: "Past chats" });
     await ask("something");
-    expect(screen.getByRole("button", { name: "Past chats (1)" })).toHaveAttribute("aria-expanded", "false");
-    await userEvent.click(screen.getByRole("button", { name: "Past chats (1)" }));
+    const toggle = screen.getByRole("button", { name: "Past chats (1)" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     expect(sidebar()).toHaveClass("history-open");
     await userEvent.click(within(sidebar()).getByRole("button", { name: /^something/ }));
-    expect(sidebar()).not.toHaveClass("history-open"); // picking a chat closes the list
+    expect(sidebar()).toHaveClass("history-open");
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(sidebar()).not.toHaveClass("history-open");
+    await userEvent.click(toggle);
+    expect(sidebar()).toHaveClass("history-open");
+  });
+
+  describe("on a phone", () => {
+    beforeEach(() => {
+      window.matchMedia = vi.fn().mockReturnValue({ matches: true });
+    });
+    afterEach(() => {
+      delete window.matchMedia;
+    });
+
+    it("starts with the drawer shut, opens it from the toggle, and shuts it again when a chat is picked", async () => {
+      render(<Chat />);
+      const toggle = screen.getByRole("button", { name: "Past chats" });
+      expect(toggle).toHaveAttribute("aria-expanded", "false");
+      expect(sidebar()).not.toHaveClass("history-open");
+      await ask("something");
+      await userEvent.click(screen.getByRole("button", { name: "Past chats (1)" }));
+      expect(toggle).toHaveAttribute("aria-expanded", "true");
+      expect(sidebar()).toHaveClass("history-open");
+      await userEvent.click(within(sidebar()).getByRole("button", { name: /^something/ }));
+      expect(sidebar()).not.toHaveClass("history-open");
+    });
+
+    it("shuts the drawer when New chat is chosen", async () => {
+      render(<Chat />);
+      await userEvent.click(screen.getByRole("button", { name: "Past chats" }));
+      await userEvent.click(within(sidebar()).getByRole("button", { name: "New chat" }));
+      expect(sidebar()).not.toHaveClass("history-open");
+    });
   });
 });

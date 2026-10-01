@@ -1,6 +1,6 @@
 # CargoMate AI Bot
 
-RAG chat for an import-export desk (spec §4.1.1). Ask about HS codes, DGFT schemes, freight and port delays.
+RAG chat for an import-export desk (spec 4.1.1). Ask about HS codes, DGFT schemes, freight and port delays.
 Answers come only from uploaded documents, in a fixed structure, with citations and a server-added disclaimer.
 
 ## Run it
@@ -64,10 +64,14 @@ question you get a single "Not in the documents" reply, never an invented answer
 Replies are rendered as markdown: **bold** on key figures with a highlighter underline, lists, and tables. Links,
 images and raw HTML are deliberately not rendered, because uploaded documents are untrusted text.
 
+The chat is laid out like other chat apps: a centred column for the thread and the question box, with the page itself
+never scrolling. The disclaimer sits once under the question box instead of under every reply (the API still sends it
+with each answer).
+
 ## Past chats
 
-The sidebar (a "Past chats" button on small screens) lists earlier conversations, newest first, titled by their first
-question. Open one to see its answers and sources again and keep asking in it, start a fresh one with **New chat**, or
+The sidebar lists earlier conversations, newest first, titled by their first question. The **Past chats** button folds
+it away and brings it back; on a phone it opens as a drawer over the chat. Open one to see its answers and sources again and keep asking in it, start a fresh one with **New chat**, or
 delete one. Up to 50 chats are kept.
 
 History lives in this browser's localStorage, so it is per browser and per device, and clearing site data clears it.
@@ -78,7 +82,7 @@ are updated later. Cross-device history would need logins and a server table.
 
 ```bash
 cd backend && .venv/Scripts/python -m pytest          # 89 tests, no network, no gateway token
-cd frontend && npm test                               # 91 tests
+cd frontend && npm test                               # 94 tests
 cd backend && .venv/Scripts/python -m app.seed --ask  # real APIs: runs the four example questions
 ```
 

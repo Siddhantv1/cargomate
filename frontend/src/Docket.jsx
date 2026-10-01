@@ -73,7 +73,6 @@ export default function Docket({ answer }) {
         </div>
         <Cites ids={lead.citations} byId={byId} onOpen={showSource} />
         {sources}
-        <p className="notice-quiet">{answer.disclaimer}</p>
       </article>
     );
   }
@@ -116,7 +115,6 @@ export default function Docket({ answer }) {
       </div>
 
       {sources}
-      <p className="notice">{answer.disclaimer}</p>
     </article>
   );
 }

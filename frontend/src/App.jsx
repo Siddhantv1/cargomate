@@ -10,9 +10,9 @@ const TABS = [
 export default function App() {
   const [tab, setTab] = useState("ask");
   return (
-    <>
+    <div className="app">
       <header className="masthead">
-        <div className="wrap masthead-row">
+        <div className="masthead-row">
           <span className="wordmark">CargoMate</span>
           <nav aria-label="Sections">
             {TABS.map((t) => (
@@ -33,9 +33,9 @@ export default function App() {
       <main hidden={tab !== "ask"}>
         <Chat />
       </main>
-      <main hidden={tab !== "kb"}>
+      <main className="page-scroll" hidden={tab !== "kb"}>
         <Admin />
       </main>
-    </>
+    </div>
   );
 }

@@ -24,7 +24,11 @@ export const EXAMPLES = [
   "Port waiting time for bulk shipment?",
 ];
 
-/** "- a\n- b\ntext" -> [{type:"ul", items:[a,b]}, {type:"p", text}] */
+// Shown once under the composer, not under every reply. The API still sends the same text with each answer.
+export const DISCLAIMER =
+  "CargoMate gives general information drawn from the documents it cites. It is not legal, customs or financial advice. " +
+  "Rates, schemes and eligibility change, so confirm with DGFT, your customs broker or your freight forwarder before you act.";
+
 /** A reply that only uses the lead answer (a follow-up or quick question) shows as a chat reply, not a docket. */
 export const isConversational = (answer) =>
   !SECTIONS.some((s) => answer.sections[s.key].status !== "not_applicable");
