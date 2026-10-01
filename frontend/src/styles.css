@@ -44,6 +44,78 @@ textarea {
   color: inherit;
 }
 
+/* ---------- scrollbars: square ink thumb on the paper tone, like the docket's ruled lines ---------- */
+* {
+  --sb-bg: var(--paper); /* the surface behind the bar; the thumb is inset with the same colour */
+  scrollbar-width: auto;
+  scrollbar-color: var(--ink) var(--sb-bg); /* Firefox */
+}
+
+.history,
+.table-wrap {
+  scrollbar-width: thin;
+}
+
+textarea {
+  --sb-bg: var(--sheet);
+}
+
+/* Chromium and Safari: full styling. Setting scrollbar-color above would switch this off in Chromium 121+,
+   so it is reset to auto here. Firefox doesn't match the selector and keeps the rules above. */
+@supports selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+
+  .history::-webkit-scrollbar,
+  .table-wrap::-webkit-scrollbar,
+  textarea::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--sb-bg);
+  }
+
+  ::-webkit-scrollbar-track:vertical {
+    border-left: 1px solid var(--ink);
+  }
+
+  ::-webkit-scrollbar-track:horizontal {
+    border-top: 1px solid var(--ink);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--ink);
+    border: 3px solid var(--sb-bg);
+  }
+
+  .history::-webkit-scrollbar-thumb,
+  .table-wrap::-webkit-scrollbar-thumb,
+  textarea::-webkit-scrollbar-thumb {
+    border-width: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--green-deep);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--sb-bg);
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 2px;
