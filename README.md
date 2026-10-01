@@ -31,11 +31,21 @@ documents disagree.
 
 Name files `hs_code__*.csv`, `dgft__*.md`, `freight__*`, `port__*`, `compliance__*` and the upload form preselects the type.
 
+## Past chats
+
+The sidebar (a "Past chats" button on small screens) lists earlier conversations, newest first, titled by their first
+question. Open one to see its answers and sources again and keep asking in it, start a fresh one with **New chat**, or
+delete one. Up to 50 chats are kept.
+
+History lives in this browser's localStorage, so it is per browser and per device, and clearing site data clears it.
+Nothing is stored on the server. Answers are saved as they were when asked, so an old chat won't change if documents
+are updated later. Cross-device history would need logins and a server table.
+
 ## Tests
 
 ```bash
-cd backend && .venv/Scripts/python -m pytest          # 74 tests, no network, no gateway token
-cd frontend && npm test                               # 37 tests
+cd backend && .venv/Scripts/python -m pytest          # 84 tests, no network, no gateway token
+cd frontend && npm test                               # 68 tests
 cd backend && .venv/Scripts/python -m app.seed --ask  # real APIs: runs the four example questions
 ```
 
