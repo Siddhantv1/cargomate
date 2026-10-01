@@ -59,6 +59,16 @@ export function buildHistory(exchanges) {
     .slice(-6);
 }
 
+/** "Today", "Yesterday", "3 Oct", or "3 Oct 2025" for another year, by the viewer's local calendar day. */
+export function relativeDay(ts, now = Date.now()) {
+  const day = (t) => new Date(new Date(t).getFullYear(), new Date(t).getMonth(), new Date(t).getDate()).getTime();
+  const diff = Math.round((day(now) - day(ts)) / 86400000);
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Yesterday";
+  const sameYear = new Date(ts).getFullYear() === new Date(now).getFullYear();
+  return new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short", ...(sameYear ? {} : { year: "numeric" }) });
+}
+
 export const formatDate = (iso) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
     day: "numeric",

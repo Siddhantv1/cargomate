@@ -1,5 +1,5 @@
 import { answerFixture } from "./fixtures.js";
-import { buildHistory, flattenAnswer, formatDate, parseContent } from "./format.js";
+import { buildHistory, flattenAnswer, formatDate, parseContent, relativeDay } from "./format.js";
 
 describe("parseContent", () => {
   it("groups consecutive bullets and keeps paragraphs", () => {
@@ -57,6 +57,20 @@ describe("buildHistory", () => {
     const empty = answerFixture();
     for (const s of Object.values(empty.sections)) s.status = "no_data";
     expect(buildHistory([{ question: "q", answer: empty }])[1].content).toBe("No answer found.");
+  });
+});
+
+describe("relativeDay", () => {
+  const now = new Date(2026, 9, 15, 10, 0).getTime(); // 15 Oct 2026, local
+
+  it("says Today and Yesterday by calendar day, not by 24-hour distance", () => {
+    expect(relativeDay(new Date(2026, 9, 15, 0, 5).getTime(), now)).toBe("Today");
+    expect(relativeDay(new Date(2026, 9, 14, 23, 55).getTime(), now)).toBe("Yesterday");
+  });
+
+  it("uses a short date for older chats this year and adds the year for earlier years", () => {
+    expect(relativeDay(new Date(2026, 9, 3).getTime(), now)).toBe("3 Oct");
+    expect(relativeDay(new Date(2025, 11, 31).getTime(), now)).toBe("31 Dec 2025");
   });
 });
 
