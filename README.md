@@ -68,6 +68,9 @@ The chat is laid out like other chat apps: a centred column for the thread and t
 never scrolling. The disclaimer sits once under the question box instead of under every reply (the API still sends it
 with each answer).
 
+All sizes are in `rem`, and the root size is 75% on desktop and 100% on phones (see the top of `styles.css`), so the
+whole app can be made bigger or smaller by changing that one number. Keep new sizes in `rem`, not `px`.
+
 ## Past chats
 
 The sidebar lists earlier conversations, newest first, titled by their first question. The **Past chats** button folds
@@ -82,7 +85,7 @@ are updated later. Cross-device history would need logins and a server table.
 
 ```bash
 cd backend && .venv/Scripts/python -m pytest          # 89 tests, no network, no gateway token
-cd frontend && npm test                               # 94 tests
+cd frontend && npm test                               # 95 tests
 cd backend && .venv/Scripts/python -m app.seed --ask  # real APIs: runs the four example questions
 ```
 

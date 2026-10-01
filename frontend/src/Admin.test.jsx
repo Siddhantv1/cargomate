@@ -90,6 +90,21 @@ describe("Admin", () => {
     expect(screen.getByRole("button", { name: "Remove" })).toBeInTheDocument();
   });
 
+  it("shows the confirmation as a bubble next to the row's own Remove link, which stays put", async () => {
+    render(<Admin />);
+    await unlock();
+    const remove = screen.getByRole("button", { name: "Remove" });
+    expect(screen.queryByRole("group")).toBeNull();
+    await userEvent.click(remove);
+    const bubble = screen.getByRole("group", { name: "Remove freight__rates.csv?" });
+    expect(bubble).toHaveClass("confirm");
+    expect(remove).toBeInTheDocument();
+    expect(remove).toHaveAttribute("aria-expanded", "true");
+    expect(remove.closest("td")).toContainElement(bubble);
+    await userEvent.click(screen.getByRole("button", { name: "Keep" }));
+    expect(screen.queryByRole("group")).toBeNull();
+  });
+
   it("removes a document after confirmation and refreshes", async () => {
     api.deleteDoc.mockResolvedValue({});
     render(<Admin />);

@@ -22,6 +22,14 @@ html {
   background: var(--paper);
 }
 
+/* Sizes are in rem, so this one number scales the whole app. Desktop gets the 75% it was designed to be seen at;
+   it still follows the browser's own font-size setting. Phones keep full size for reading and tapping. */
+@media (min-width: 901px) {
+  html {
+    font-size: 75%;
+  }
+}
+
 body {
   margin: 0;
   background: var(--paper);
@@ -153,9 +161,9 @@ textarea,
 
 .wrap {
   width: 100%;
-  max-width: 980px;
+  max-width: 61.25rem;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 1rem;
 }
 
 /* ---------- masthead: a quiet corrugated container wall ---------- */
@@ -163,8 +171,8 @@ textarea,
   background-color: var(--green);
   background-image: repeating-linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.05) 0 5px,
-    rgba(0, 0, 0, 0.13) 5px 10px
+    rgba(255, 255, 255, 0.05) 0 0.3125rem,
+    rgba(0, 0, 0, 0.13) 0.3125rem 0.625rem
   );
   border-bottom: 4px solid var(--ink);
 }
@@ -173,8 +181,8 @@ textarea,
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 16px 0;
+  gap: 1rem;
+  padding: 0.75rem 1rem 0;
 }
 
 .wordmark {
@@ -183,19 +191,19 @@ textarea,
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--sheet);
-  padding-bottom: 10px;
+  padding-bottom: 0.625rem;
 }
 
 .masthead nav {
   display: flex;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .tab {
   background: none;
   border: 0;
   border-bottom: 4px solid transparent;
-  padding: 10px 14px 10px;
+  padding: 0.625rem 0.875rem 0.625rem;
   margin-bottom: -4px;
   color: var(--sheet);
   font-stretch: 75%;
@@ -218,8 +226,8 @@ textarea,
 
 /* ---------- chat shell: sidebar | (top bar, scrolling thread, composer), the thread centred in its pane ---------- */
 .chat-shell {
-  --side: 280px;
-  --col: 840px; /* the reading column, shared by the thread and the composer so they line up */
+  --side: 17.5rem;
+  --col: 52.5rem; /* the reading column, shared by the thread and the composer so they line up */
   position: relative;
   display: flex;
   height: 100%;
@@ -235,7 +243,7 @@ textarea,
 
 .chat-bar {
   flex: none;
-  padding: 10px 16px 0;
+  padding: 0.625rem 1rem 0;
 }
 
 .scroller {
@@ -250,9 +258,9 @@ textarea,
   flex-direction: column;
   width: 100%;
   min-height: 100%;
-  max-width: calc(var(--col) + 32px);
+  max-width: calc(var(--col) + 2rem);
   margin: 0 auto;
-  padding: 16px 16px 32px;
+  padding: 1rem 1rem 2rem;
 }
 
 /* ---------- past chats: a full-height sidebar that slides away ---------- */
@@ -262,7 +270,7 @@ textarea,
   flex-direction: column;
   width: var(--side);
   margin-left: calc(var(--side) * -1);
-  padding: 14px 14px 0;
+  padding: 0.875rem 0.875rem 0;
   background: var(--sheet);
   border-right: 2px solid var(--ink);
   visibility: hidden;
@@ -280,7 +288,7 @@ textarea,
   min-height: 0;
   overflow-y: auto;
   list-style: none;
-  margin: 14px 0 0;
+  margin: 0.875rem 0 0;
   padding: 0;
   border-top: 2px solid var(--ink);
 }
@@ -292,7 +300,7 @@ textarea,
 
 .new-chat {
   width: 100%;
-  min-height: 44px;
+  min-height: 2.75rem;
   background: var(--green);
   border: 2px solid var(--ink);
   border-radius: 0;
@@ -316,7 +324,7 @@ textarea,
 .conv {
   display: block;
   width: 100%;
-  padding: 10px 8px 2px 12px;
+  padding: 0.625rem 0.5rem 2px 0.75rem;
   background: none;
   border: 0;
   border-left: 6px solid transparent;
@@ -353,8 +361,8 @@ textarea,
 
 .conv-actions {
   display: flex;
-  gap: 14px;
-  padding: 0 8px 8px 18px;
+  gap: 0.875rem;
+  padding: 0 0.5rem 0.5rem 1.125rem;
   font-size: 0.85rem;
 }
 
@@ -368,15 +376,15 @@ textarea,
 }
 
 .history-empty {
-  margin-top: 14px;
+  margin-top: 0.875rem;
 }
 
 .history-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  padding: 0 12px 0 10px;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+  padding: 0 0.75rem 0 0.625rem;
   background: var(--sheet);
   border: 2px solid var(--ink);
   border-radius: 0;
@@ -392,8 +400,8 @@ textarea,
 
 /* three ruled lines; the top and bottom ones close in when the sidebar is open */
 .burger {
-  width: 18px;
-  height: 14px;
+  width: 1.125rem;
+  height: 0.875rem;
   background: linear-gradient(var(--ink), var(--ink)) 0 0 / 100% 2px no-repeat,
     linear-gradient(var(--ink), var(--ink)) 0 6px / 100% 2px no-repeat,
     linear-gradient(var(--ink), var(--ink)) 0 12px / 100% 2px no-repeat;
@@ -411,12 +419,12 @@ textarea,
 
 .hero {
   margin: auto 0;
-  padding: 24px 0 8px;
+  padding: 1.5rem 0 0.5rem;
   text-align: center;
 }
 
 .hero h1 {
-  margin: 0 auto 18px;
+  margin: 0 auto 1.125rem;
   max-width: 14ch;
   font-stretch: 62%;
   font-weight: 800;
@@ -427,7 +435,7 @@ textarea,
 
 .hero p {
   max-width: 52ch;
-  margin: 0 auto 28px;
+  margin: 0 auto 1.75rem;
   font-size: 1.08rem;
   color: var(--ink-soft);
 }
@@ -442,7 +450,7 @@ textarea,
 .examples button {
   display: block;
   width: 100%;
-  padding: 14px 8px;
+  padding: 0.875rem 0.5rem;
   background: none;
   border: 0;
   border-bottom: 1px solid var(--ink);
@@ -459,12 +467,12 @@ textarea,
 
 /* ---------- exchange + docket ---------- */
 .exchange {
-  margin-bottom: 56px;
-  scroll-margin-top: 16px;
+  margin-bottom: 3.5rem;
+  scroll-margin-top: 1rem;
 }
 
 .exchange h2 {
-  margin: 0 0 18px;
+  margin: 0 0 1.125rem;
   max-width: 34ch;
   font-stretch: 70%;
   font-weight: 800;
@@ -487,7 +495,7 @@ textarea,
 
 .cell {
   background: var(--sheet);
-  padding: 14px 16px 16px;
+  padding: 0.875rem 1rem 1rem;
   min-width: 0;
 }
 
@@ -497,17 +505,17 @@ textarea,
 
 .cell-not_applicable {
   background: #ebeeeb;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
 }
 
 .cell-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-  min-height: 34px;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  min-height: 2.125rem;
 }
 
 .cell h3,
@@ -526,7 +534,7 @@ textarea,
 
 .cell-body p,
 .cell-body ul {
-  margin: 0 0 8px;
+  margin: 0 0 0.5rem;
   max-width: 70ch;
 }
 
@@ -535,7 +543,7 @@ textarea,
 }
 
 .cell-body li {
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .cell-no_data .cell-body {
@@ -552,8 +560,8 @@ textarea,
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px 10px;
-  margin-top: 10px;
+  gap: 0.25rem 0.625rem;
+  margin-top: 0.625rem;
   font-size: 0.88rem;
   color: var(--ink-soft);
 }
@@ -579,9 +587,9 @@ textarea,
 /* the one bold moment: rubber stamps landing on the form */
 .stamp {
   flex: none;
-  padding: 2px 9px 1px;
+  padding: 2px 0.5625rem 1px;
   border: 2px solid currentColor;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
   font-family: var(--stencil);
   font-size: 1rem;
   letter-spacing: 0.06em;
@@ -628,13 +636,13 @@ textarea,
 
 /* ---------- sources + notice ---------- */
 .sources {
-  padding: 14px 16px 6px;
+  padding: 0.875rem 1rem 0.375rem;
   border-top: 1px solid var(--ink);
 }
 
 .sources ul {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 0.5rem 0 0;
   padding: 0;
 }
 
@@ -642,9 +650,9 @@ textarea,
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 2px 14px;
+  gap: 2px 0.875rem;
   width: 100%;
-  padding: 8px 0;
+  padding: 0.5rem 0;
   background: none;
   border: 0;
   border-top: 1px solid #b9c3c0;
@@ -666,8 +674,8 @@ textarea,
 }
 
 .excerpt {
-  margin: 0 0 10px;
-  padding: 10px 12px;
+  margin: 0 0 0.625rem;
+  padding: 0.625rem 0.75rem;
   background: var(--paper);
   border-left: 4px solid var(--yellow);
   font-size: 0.9rem;
@@ -683,7 +691,7 @@ textarea,
 .md p,
 .md ul,
 .md ol {
-  margin: 0 0 8px;
+  margin: 0 0 0.5rem;
   max-width: 70ch;
 }
 
@@ -693,7 +701,7 @@ textarea,
 }
 
 .md li {
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 /* a highlighter pen on the figures that matter */
@@ -704,7 +712,7 @@ textarea,
 }
 
 .md code {
-  padding: 0 4px;
+  padding: 0 0.25rem;
   background: var(--paper);
   border: 1px solid #b9c3c0;
   font-size: 0.92em;
@@ -713,7 +721,7 @@ textarea,
 
 .md-table {
   max-width: 100%;
-  margin: 4px 0 10px;
+  margin: 0.25rem 0 0.625rem;
   overflow-x: auto;
 }
 
@@ -725,20 +733,20 @@ textarea,
 }
 
 .md-table th {
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   background: var(--ink);
   color: var(--sheet);
 }
 
 .md-table td {
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   border-top: 1px solid #b9c3c0;
 }
 
 /* ---------- the lead answer inside a docket, and the plain chat reply ---------- */
 .lead {
   --i: 0; /* stamp timing, as in the cells */
-  padding: 16px 18px 14px;
+  padding: 1rem 1.125rem 0.875rem;
   border-bottom: 1px solid var(--ink);
   font-size: 1.12rem;
   line-height: 1.5;
@@ -746,7 +754,7 @@ textarea,
 
 .lead .stamp {
   float: right;
-  margin: 0 0 6px 14px;
+  margin: 0 0 0.375rem 0.875rem;
 }
 
 .lead-no_data {
@@ -758,7 +766,7 @@ textarea,
 }
 
 .reply-body {
-  padding: 2px 0 2px 18px;
+  padding: 2px 0 2px 1.125rem;
   border-left: 6px solid var(--green);
   font-size: 1.1rem;
   line-height: 1.55;
@@ -770,7 +778,7 @@ textarea,
 }
 
 .reply-tag {
-  margin: 0 0 6px;
+  margin: 0 0 0.375rem;
   color: var(--red);
   font-stretch: 75%;
   font-weight: 800;
@@ -778,11 +786,11 @@ textarea,
 }
 
 .reply .cell-foot {
-  margin: 10px 0 0 24px;
+  margin: 0.625rem 0 0 1.5rem;
 }
 
 .reply .sources {
-  padding: 12px 0 0 24px;
+  padding: 0.75rem 0 0 1.5rem;
   border-top: 0;
 }
 
@@ -791,17 +799,17 @@ textarea,
 }
 
 .exchange-chat {
-  margin-bottom: 40px;
+  margin-bottom: 2.5rem;
 }
 
 .exchange-chat h2 {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   font-size: clamp(1.3rem, 3.4vw, 1.75rem);
 }
 
 .followup {
-  margin: 16px 0 0;
-  padding-left: 12px;
+  margin: 1rem 0 0;
+  padding-left: 0.75rem;
   border-left: 5px solid var(--yellow);
   font-size: 1.1rem;
   font-weight: 500;
@@ -828,7 +836,7 @@ textarea,
 .working {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   margin: 0;
   font-stretch: 80%;
   font-weight: 600;
@@ -837,16 +845,16 @@ textarea,
 }
 
 .working-bar {
-  width: 56px;
-  height: 8px;
-  background: repeating-linear-gradient(90deg, var(--ink) 0 8px, var(--yellow) 8px 16px);
-  background-size: 32px 8px;
+  width: 3.5rem;
+  height: 0.5rem;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 0.5rem, var(--yellow) 0.5rem 1rem);
+  background-size: 2rem 0.5rem;
   animation: slide 700ms linear infinite;
 }
 
 @keyframes slide {
   to {
-    background-position-x: 16px;
+    background-position-x: 1rem;
   }
 }
 
@@ -857,8 +865,8 @@ textarea,
 }
 
 .banner {
-  margin: 0 0 20px;
-  padding: 12px 16px;
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
   background: var(--sheet);
   border-left: 6px solid var(--green);
   font-weight: 500;
@@ -872,9 +880,9 @@ textarea,
 .composer {
   flex: none;
   width: 100%;
-  max-width: calc(var(--col) + 32px);
+  max-width: calc(var(--col) + 2rem);
   margin: 0 auto;
-  padding: 8px 16px 12px;
+  padding: 0.5rem 1rem 0.75rem;
 }
 
 /* one ruled box with the Ask button set into its right edge */
@@ -894,7 +902,7 @@ textarea,
 .composer textarea {
   flex: 1;
   min-width: 0;
-  padding: 12px 14px;
+  padding: 0.75rem 0.875rem;
   background: none;
   border: 0;
   border-radius: 0;
@@ -905,8 +913,8 @@ textarea,
 
 /* the one standing notice, in place of a copy under every reply */
 .disclaimer {
-  margin: 8px 0 0;
-  font-size: 0.78rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem; /* it is legal text, so it stays readable at the 75% desktop scale */
   line-height: 1.4;
   color: var(--ink-soft);
   text-align: center;
@@ -914,7 +922,7 @@ textarea,
 
 button[type="submit"],
 .danger {
-  padding: 0 26px;
+  padding: 0 1.625rem;
   background: var(--green);
   border: 2px solid var(--ink);
   border-radius: 0;
@@ -941,12 +949,12 @@ button[type="submit"]:disabled {
 
 /* ---------- admin ---------- */
 .admin {
-  padding-top: 40px;
-  padding-bottom: 80px;
+  padding-top: 2.5rem;
+  padding-bottom: 5rem;
 }
 
 .page-title {
-  margin: 0 0 12px;
+  margin: 0 0 0.75rem;
   font-stretch: 62%;
   font-weight: 800;
   font-size: clamp(2.6rem, 8vw, 4.6rem);
@@ -955,7 +963,7 @@ button[type="submit"]:disabled {
 
 .lede {
   max-width: 60ch;
-  margin: 0 0 28px;
+  margin: 0 0 1.75rem;
   font-size: 1.1rem;
   color: var(--ink-soft);
 }
@@ -963,9 +971,9 @@ button[type="submit"]:disabled {
 .panel {
   display: flex;
   align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding: 18px 16px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.125rem 1rem;
   background: var(--sheet);
   border: 2px solid var(--ink);
   border-top: 8px solid var(--green);
@@ -980,7 +988,7 @@ button[type="submit"]:disabled {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.375rem;
   min-width: 0;
 }
 
@@ -996,15 +1004,15 @@ button[type="submit"]:disabled {
 
 .field input,
 .field select {
-  min-height: 44px;
-  padding: 8px 10px;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.625rem;
   background: #fff;
   border: 2px solid var(--ink);
   border-radius: 0;
 }
 
 .panel button[type="submit"] {
-  min-height: 44px;
+  min-height: 2.75rem;
 }
 
 .table-wrap {
@@ -1020,7 +1028,7 @@ table {
 }
 
 th {
-  padding: 10px 14px;
+  padding: 0.625rem 0.875rem;
   text-align: left;
   background: var(--ink);
   color: var(--sheet);
@@ -1030,7 +1038,7 @@ th {
 }
 
 td {
-  padding: 10px 14px;
+  padding: 0.625rem 0.875rem;
   border-top: 1px solid #b9c3c0;
   vertical-align: middle;
 }
@@ -1040,22 +1048,68 @@ td strong {
 }
 
 .actions {
+  position: relative;
   text-align: right;
   white-space: nowrap;
 }
 
 .actions .link {
-  margin-left: 14px;
+  margin-left: 0.875rem;
 }
 
 .danger {
-  padding: 6px 14px;
+  padding: 0.375rem 0.875rem;
   background: var(--red);
   font-size: 1rem;
 }
 
+/* "Are you sure" bubble: floats over the row, anchored at the Remove link, so nothing in the table moves */
+.confirm {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.3125rem 0.75rem;
+  background: var(--ink);
+  color: var(--sheet);
+  box-shadow: 0 0 0 2px var(--yellow);
+  transform: translateY(-50%);
+  animation: confirm-in 160ms ease-out;
+}
+
+.confirm .danger {
+  padding: 0.125rem 0.625rem;
+  border: 0;
+  font-size: 0.9rem;
+}
+
+.confirm .link {
+  margin: 0;
+  color: var(--sheet);
+}
+
+.confirm .link:hover {
+  color: var(--ink);
+}
+
+@keyframes confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm {
+    animation: none;
+  }
+}
+
 .empty {
-  padding: 28px 16px;
+  padding: 1.75rem 1rem;
   background: var(--sheet);
   border: 2px dashed var(--ink-soft);
   color: var(--ink-soft);
@@ -1076,7 +1130,7 @@ td strong {
 
   .history-open {
     margin-left: 0;
-    box-shadow: 6px 0 0 rgba(16, 39, 46, 0.25);
+    box-shadow: 0.375rem 0 0 rgba(16, 39, 46, 0.25);
   }
 
   .scrim {
@@ -1127,7 +1181,7 @@ td strong {
 
   .table-wrap tr {
     display: block;
-    padding: 12px 14px;
+    padding: 0.75rem 0.875rem;
     border-top: 1px solid #b9c3c0;
   }
 
@@ -1161,17 +1215,26 @@ td strong {
 
   .table-wrap td.actions {
     display: block;
-    margin-top: 6px;
+    margin-top: 0.375rem;
     text-align: left;
   }
 
   .actions .link {
     margin-left: 0;
-    margin-right: 14px;
+    margin-right: 0.875rem;
+  }
+
+  /* rows are stacked blocks on a phone, so the bubble can just sit in the row */
+  .confirm {
+    position: static;
+    display: inline-flex;
+    margin-top: 0.375rem;
+    transform: none;
+    animation: none;
   }
 
   .composer button[type="submit"] {
-    padding: 0 18px;
+    padding: 0 1.125rem;
   }
 
   .disclaimer {
@@ -1180,7 +1243,7 @@ td strong {
 
   .masthead-row {
     flex-wrap: wrap;
-    padding-top: 14px;
+    padding-top: 0.875rem;
   }
 
   .wordmark {

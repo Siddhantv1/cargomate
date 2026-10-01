@@ -146,19 +146,24 @@ export default function Admin() {
                       <td>{formatDate(d.effective_date)}</td>
                       <td>{d.n_chunks}</td>
                       <td className="actions">
-                        {confirming === d.name ? (
-                          <>
+                        <button
+                          type="button"
+                          className="link"
+                          aria-expanded={confirming === d.name}
+                          onClick={() => setConfirming(d.name)}
+                        >
+                          Remove
+                        </button>
+                        {/* floats over the row, so the table keeps its layout */}
+                        {confirming === d.name && (
+                          <span className="confirm" role="group" aria-label={`Remove ${d.name}?`}>
                             <button type="button" className="danger" onClick={() => remove(d.name)}>
                               Confirm remove
                             </button>
                             <button type="button" className="link" onClick={() => setConfirming(null)}>
                               Keep
                             </button>
-                          </>
-                        ) : (
-                          <button type="button" className="link" onClick={() => setConfirming(d.name)}>
-                            Remove
-                          </button>
+                          </span>
                         )}
                       </td>
                     </tr>
