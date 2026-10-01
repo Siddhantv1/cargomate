@@ -68,9 +68,10 @@ class _Claude:
                     "- Shipping bill on ICEGATE with the RoDTEP claim\n- Preferential certificate of origin under India-UAE CEPA\n"
                     "- e-BRC after payment is received")),
                 freight_and_port=Section(status="ok", citations=c("freight", "port"), content=(
-                    "Air, 1000 kg and above: 85 to 110 per kg, so about 102,000 to 132,000 for 1200 kg, 1 to 3 days.\n"
-                    "Sea LCL: 3,500 to 5,000 per CBM, about 6 to 8 CBM for 1200 kg of garments, 14 to 20 days.\n"
-                    "Choose air if the cargo is needed within a week. Sea is cheaper and fits a delivery date 3 weeks out.")),
+                    "Air at 1000 kg and above costs **85 to 110** per kg. Sea LCL is **3,500 to 5,000** per CBM, about 6 to 8 CBM here.\n\n"
+                    "| Mode | Cost for 1200 kg | Transit |\n|---|---|---|\n"
+                    "| **Air** | 102,000 to 132,000 | 1 to 3 days |\n| **Sea (LCL)** | 21,000 to 40,000 | 14 to 20 days |\n\n"
+                    "Choose **air** if the cargo is needed within a week. Sea is cheaper and fits a delivery date 3 weeks out.")),
                 follow_up_question="")
         return SimpleNamespace(stop_reason="end_turn", content=[SimpleNamespace(type="text", text=ans.model_dump_json())])
 

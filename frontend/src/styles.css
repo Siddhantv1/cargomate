@@ -132,7 +132,7 @@ textarea {
 
 .wrap {
   width: 100%;
-  max-width: 980px;
+  max-width: 1240px; /* the widest page (chat with its sidebar), so the masthead lines up with it */
   margin: 0 auto;
   padding: 0 16px;
 }
