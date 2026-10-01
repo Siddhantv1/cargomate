@@ -1,26 +1,33 @@
-import { answerFixture } from "./fixtures.js";
-import { buildHistory, flattenAnswer, formatDate, parseContent, relativeDay } from "./format.js";
+import { answerFixture, chatFixture } from "./fixtures.js";
+import { buildHistory, flattenAnswer, formatDate, isConversational, relativeDay } from "./format.js";
 
-describe("parseContent", () => {
-  it("groups consecutive bullets and keeps paragraphs", () => {
-    expect(parseContent("Intro\n- a\n- b\nOutro")).toEqual([
-      { type: "p", text: "Intro" },
-      { type: "ul", items: ["a", "b"] },
-      { type: "p", text: "Outro" },
-    ]);
+describe("isConversational", () => {
+  it("is true only when no section applies, so the reply shows as chat", () => {
+    expect(isConversational(chatFixture("Sea takes 14 to 20 days."))).toBe(true);
+    expect(isConversational(answerFixture())).toBe(false);
   });
 
-  it("ignores blank lines and tolerates empty input", () => {
-    expect(parseContent("\n\n")).toEqual([]);
-    expect(parseContent(undefined)).toEqual([]);
-  });
-
-  it("does not treat a hyphen without a space as a bullet", () => {
-    expect(parseContent("-5 percent")).toEqual([{ type: "p", text: "-5 percent" }]);
+  it("is false when any section is no_data, so the old six-no-data replies still show as a docket", () => {
+    const a = chatFixture("x");
+    a.sections.hs_code.status = "no_data";
+    expect(isConversational(a)).toBe(false);
   });
 });
 
 describe("flattenAnswer", () => {
+  it("leads with the answer when there is one, and tolerates saved chats that have none", () => {
+    expect(flattenAnswer(chatFixture("Sea takes **14 to 20** days."))).toBe("Answer: Sea takes **14 to 20** days.");
+    const saved = answerFixture();
+    delete saved.answer;
+    expect(flattenAnswer(saved)).toContain("HS code: 6109 10");
+  });
+
+  it("does not include a no_data answer, so 'nothing found' isn't fed back as a fact", () => {
+    const a = chatFixture("x");
+    a.answer = { status: "no_data", content: "Not covered.", citations: [] };
+    expect(flattenAnswer(a)).toBe("");
+  });
+
   it("includes only sections that have an answer, labelled", () => {
     const text = flattenAnswer(answerFixture());
     expect(text).toContain("HS code: 6109 10");

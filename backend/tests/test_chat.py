@@ -15,10 +15,11 @@ def run(ans, hits=HITS, history=(), stop="end_turn", q="t-shirt to UAE"):
     return answer(q, list(history), hits, c, "m"), c
 
 
-def test_no_hits_skips_the_model_and_marks_everything_no_data():
+def test_no_hits_skips_the_model_and_gives_one_clear_no_data_answer():
     out, c = run(make_answer(), hits=[])
     assert c.calls == []
-    assert {s["status"] for s in out["sections"].values()} == {"no_data"}
+    assert out["answer"]["status"] == "no_data" and "no document" in out["answer"]["content"]
+    assert {s["status"] for s in out["sections"].values()} == {"not_applicable"}
     assert out["sources"] == [] and out["disclaimer"] == DISCLAIMER
 
 
@@ -56,7 +57,8 @@ def test_all_six_sections_and_followup_always_present():
 
 def test_refusal_gives_a_safe_empty_answer():
     out, _ = run(make_answer(), stop="refusal")
-    assert {s["status"] for s in out["sections"].values()} == {"no_data"} and out["disclaimer"] == DISCLAIMER
+    assert out["answer"]["status"] == "no_data" and out["disclaimer"] == DISCLAIMER
+    assert {s["status"] for s in out["sections"].values()} == {"not_applicable"}
 
 
 GOOD = make_answer(hs_code=("ok", "6109", ["S1"])).model_dump_json()
@@ -77,6 +79,37 @@ def test_json_is_accepted_bare_fenced_or_wrapped_in_chatter(text):
 def test_an_unreadable_reply_is_an_error_never_a_fake_no_data_answer(text):
     with pytest.raises(AnswerFormatError):
         answer("q", [], HITS, FakeClaude(text=text), "m")
+
+
+def test_a_followup_reply_lives_in_answer_not_in_a_section():
+    out, _ = run(make_answer(answer=("ok", "By **sea** it takes 14 to 20 days.", ["S1"])))
+    assert out["answer"] == {"status": "ok", "content": "By **sea** it takes 14 to 20 days.", "citations": ["S1"]}
+    assert {s["status"] for s in out["sections"].values()} == {"not_applicable"}
+    assert [s["id"] for s in out["sources"]] == ["S1"]  # the answer's citation counts as a source
+
+
+def test_the_answer_field_is_held_to_the_same_grounding_rule():
+    for ans in (("ok", "Sea is cheaper.", []), ("ok", "Sea is cheaper.", ["S9"])):
+        out, _ = run(make_answer(answer=ans))
+        assert out["answer"]["status"] == "no_data" and "No supporting source" in out["answer"]["content"]
+
+
+def test_a_bottom_line_can_sit_above_filled_sections():
+    out, _ = run(make_answer(answer=("ok", "Use **air**.", ["S1"]), freight_and_port=("ok", "Air is faster.", ["S2"])))
+    assert out["answer"]["status"] == "ok" and out["sections"]["freight_and_port"]["status"] == "ok"
+    assert {s["id"] for s in out["sources"]} == {"S1", "S2"}
+
+
+def test_a_reply_where_the_model_said_nothing_is_never_shown_blank():
+    out, _ = run(make_answer())  # everything not_applicable
+    assert out["answer"]["status"] == "no_data" and out["answer"]["content"]
+
+
+def test_the_system_prompt_asks_for_markdown_and_explains_followups():
+    _, c = run(make_answer())
+    system = c.calls[0]["system"]
+    assert "**bold**" in system and "no headings, links or images" in system.lower()
+    assert "put the reply in answer" in system.lower() and "do not force it into a section" in system.lower()
 
 
 def test_system_prompt_demands_json_even_when_the_provider_ignores_the_schema():

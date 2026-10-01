@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { askChat } from "./api.js";
 import Docket from "./Docket.jsx";
-import { EXAMPLES, buildHistory } from "./format.js";
+import { EXAMPLES, buildHistory, isConversational } from "./format.js";
 import History from "./History.jsx";
 import { deleteConversation, loadAll, newId, saveConversation, titleFor } from "./history.js";
 
@@ -120,7 +120,11 @@ export default function Chat() {
           )}
 
           {exchanges.map((x, i) => (
-            <div className="exchange" key={x.id} ref={i === exchanges.length - 1 ? lastQuestion : null}>
+            <div
+              className={`exchange${x.answer && isConversational(x.answer) ? " exchange-chat" : ""}`}
+              key={x.id}
+              ref={i === exchanges.length - 1 ? lastQuestion : null}
+            >
               <h2>{x.question}</h2>
               {x.error && (
                 <p className="banner banner-error" role="alert">

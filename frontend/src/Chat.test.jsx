@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Chat from "./Chat.jsx";
-import { answerFixture } from "./fixtures.js";
+import { answerFixture, chatFixture } from "./fixtures.js";
 import * as api from "./api.js";
 
 vi.mock("./api.js");
@@ -81,5 +81,34 @@ describe("Chat", () => {
     expect(await screen.findByText(/Is the fabric knitted or woven\?/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Reply" }));
     expect(box()).toHaveFocus();
+  });
+});
+
+describe("Chat: dynamic replies", () => {
+  it("answers a follow-up as a chat reply and an analysis question as a docket, in one thread", async () => {
+    api.askChat.mockResolvedValueOnce(answerFixture());
+    api.askChat.mockResolvedValueOnce(chatFixture("By **sea** it takes 14 to 20 days."));
+    const { container } = render(<Chat />);
+    await userEvent.type(box(), "hs code for cotton shirts{Enter}");
+    await screen.findByRole("heading", { name: "HS code" });
+    await waitFor(() => expect(box()).toBeEnabled());
+    await userEvent.type(box(), "what about sea?{Enter}");
+    await waitFor(() => expect(container.querySelector(".reply")).not.toBeNull());
+    expect(container.querySelectorAll(".docket")).toHaveLength(1);
+    const [analysis, followUp] = container.querySelectorAll(".exchange");
+    expect(analysis).not.toHaveClass("exchange-chat");
+    expect(followUp).toHaveClass("exchange-chat");
+    expect(followUp.querySelector("strong")).toHaveTextContent("sea");
+  });
+
+  it("feeds a chat reply back as context for the next question", async () => {
+    api.askChat.mockResolvedValue(chatFixture("Sea takes 14 to 20 days."));
+    render(<Chat />);
+    await userEvent.type(box(), "sea transit?{Enter}");
+    await screen.findByText(/Sea takes 14 to 20 days/);
+    await waitFor(() => expect(box()).toBeEnabled());
+    await userEvent.type(box(), "and air?{Enter}");
+    const history = api.askChat.mock.calls[1][1];
+    expect(history[1]).toEqual({ role: "assistant", content: "Answer: Sea takes 14 to 20 days." });
   });
 });

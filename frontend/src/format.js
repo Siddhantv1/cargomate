@@ -25,28 +25,17 @@ export const EXAMPLES = [
 ];
 
 /** "- a\n- b\ntext" -> [{type:"ul", items:[a,b]}, {type:"p", text}] */
-export function parseContent(text) {
-  const blocks = [];
-  for (const raw of (text || "").split("\n")) {
-    const line = raw.trim();
-    if (!line) continue;
-    if (line.startsWith("- ")) {
-      const last = blocks[blocks.length - 1];
-      if (last?.type === "ul") last.items.push(line.slice(2));
-      else blocks.push({ type: "ul", items: [line.slice(2)] });
-    } else {
-      blocks.push({ type: "p", text: line });
-    }
-  }
-  return blocks;
-}
+/** A reply that only uses the lead answer (a follow-up or quick question) shows as a chat reply, not a docket. */
+export const isConversational = (answer) =>
+  !SECTIONS.some((s) => answer.sections[s.key].status !== "not_applicable");
 
 /** Plain-text version of an answer, sent back as history so follow-ups have context. */
 export function flattenAnswer(answer) {
-  return SECTIONS.filter((s) => answer.sections[s.key].status === "ok")
-    .map((s) => `${s.label}: ${answer.sections[s.key].content}`)
-    .join("\n")
-    .slice(0, 1500);
+  const lines = SECTIONS.filter((s) => answer.sections[s.key].status === "ok").map(
+    (s) => `${s.label}: ${answer.sections[s.key].content}`,
+  );
+  if (answer.answer?.status === "ok") lines.unshift(`Answer: ${answer.answer.content}`); // saved older chats have no lead
+  return lines.join("\n").slice(0, 1500);
 }
 
 export function buildHistory(exchanges) {

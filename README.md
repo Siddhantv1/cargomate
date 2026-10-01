@@ -22,6 +22,29 @@ npm run dev                 # http://localhost:5173, proxies /api to localhost:8
 
 Open the app, then use **Knowledge base** (admin token from `.env`) to upload documents.
 
+## Environment Variables
+You would require the following credentials for AI/LLM access to work for RAG. 
+Fill out the Credentials of your `.env` file as below.
+
+```
+GATEWAY_BASE_URL=https://your-gateway.example.com
+GATEWAY_AUTH_TOKEN=
+CHAT_PROVIDER=@dsvertex
+EMBED_PROVIDER=@azure-openai
+
+# models as the gateway names them
+ANSWER_MODEL=anthropic.claude-sonnet-5-5
+EMBED_MODEL=text-embedding-3-small
+
+# admin uploads
+ADMIN_TOKEN=change-me
+# optional
+CORS_ORIGINS=http://localhost:5173
+
+```
+
+
+
 ## How the refresh works
 
 Uploading a file embeds it first, then swaps out that file name's old passages in one transaction.
@@ -30,6 +53,16 @@ previous version untouched. Each document has a type and an effective date, and 
 documents disagree.
 
 Name files `hs_code__*.csv`, `dgft__*.md`, `freight__*`, `port__*`, `compliance__*` and the upload form preselects the type.
+
+## How replies look
+
+The reply adapts to the question. Analysis and document questions (a product to classify, incentives for an HS code,
+an air or sea decision) get the six-section docket, with an optional one-line bottom line on top. Follow-ups and quick
+questions ("what about sea?", "what does EPCG mean?") get a plain chat reply. If the documents don't cover the
+question you get a single "Not in the documents" reply, never an invented answer.
+
+Replies are rendered as markdown: **bold** on key figures with a highlighter underline, lists, and tables. Links,
+images and raw HTML are deliberately not rendered, because uploaded documents are untrusted text.
 
 ## Past chats
 
@@ -44,8 +77,8 @@ are updated later. Cross-device history would need logins and a server table.
 ## Tests
 
 ```bash
-cd backend && .venv/Scripts/python -m pytest          # 84 tests, no network, no gateway token
-cd frontend && npm test                               # 68 tests
+cd backend && .venv/Scripts/python -m pytest          # 89 tests, no network, no gateway token
+cd frontend && npm test                               # 91 tests
 cd backend && .venv/Scripts/python -m app.seed --ask  # real APIs: runs the four example questions
 ```
 

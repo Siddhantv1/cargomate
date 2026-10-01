@@ -590,6 +590,136 @@ textarea {
   max-width: none;
 }
 
+/* ---------- markdown inside replies ---------- */
+.md > :last-child {
+  margin-bottom: 0;
+}
+
+.md p,
+.md ul,
+.md ol {
+  margin: 0 0 8px;
+  max-width: 70ch;
+}
+
+.md ul,
+.md ol {
+  padding-left: 1.2rem;
+}
+
+.md li {
+  margin-bottom: 4px;
+}
+
+/* a highlighter pen on the figures that matter */
+.md strong {
+  font-weight: 700;
+  padding: 0 1px;
+  background: linear-gradient(transparent 58%, rgba(242, 196, 23, 0.65) 58%);
+}
+
+.md code {
+  padding: 0 4px;
+  background: var(--paper);
+  border: 1px solid #b9c3c0;
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+}
+
+.md-table {
+  max-width: 100%;
+  margin: 4px 0 10px;
+  overflow-x: auto;
+}
+
+.md-table table {
+  width: auto;
+  min-width: 55%;
+  background: var(--sheet);
+  border: 1px solid var(--ink);
+}
+
+.md-table th {
+  padding: 6px 12px;
+  background: var(--ink);
+  color: var(--sheet);
+}
+
+.md-table td {
+  padding: 6px 12px;
+  border-top: 1px solid #b9c3c0;
+}
+
+/* ---------- the lead answer inside a docket, and the plain chat reply ---------- */
+.lead {
+  --i: 0; /* stamp timing, as in the cells */
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.lead .stamp {
+  float: right;
+  margin: 0 0 6px 14px;
+}
+
+.lead-no_data {
+  color: var(--ink-soft);
+}
+
+.reply {
+  max-width: 72ch;
+}
+
+.reply-body {
+  padding: 2px 0 2px 18px;
+  border-left: 6px solid var(--green);
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.reply-no_data {
+  border-left-color: var(--red);
+  color: var(--ink-soft);
+}
+
+.reply-tag {
+  margin: 0 0 6px;
+  color: var(--red);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.reply .cell-foot {
+  margin: 10px 0 0 24px;
+}
+
+.reply .sources {
+  padding: 12px 0 0 24px;
+  border-top: 0;
+}
+
+.reply .sources h3 {
+  font-size: 1.05rem;
+}
+
+.notice-quiet {
+  margin: 14px 0 0 24px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.exchange-chat {
+  margin-bottom: 40px;
+}
+
+.exchange-chat h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.3rem, 3.4vw, 1.75rem);
+}
+
 .followup {
   margin: 16px 0 0;
   padding-left: 12px;
@@ -899,7 +1029,7 @@ td strong {
   }
 
   /* one entry per document instead of a cramped five-column table */
-  thead {
+  .table-wrap thead {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -907,17 +1037,17 @@ td strong {
     clip: rect(0 0 0 0);
   }
 
-  tr {
+  .table-wrap tr {
     display: block;
     padding: 12px 14px;
     border-top: 1px solid #b9c3c0;
   }
 
-  tr:first-child {
+  .table-wrap tr:first-child {
     border-top: 0;
   }
 
-  td {
+  .table-wrap td {
     display: inline;
     padding: 0;
     border: 0;
@@ -925,23 +1055,23 @@ td strong {
     color: var(--ink-soft);
   }
 
-  td:first-child {
+  .table-wrap td:first-child {
     display: block;
     margin-bottom: 2px;
     font-size: 1rem;
     color: var(--ink);
   }
 
-  td:nth-child(2)::after,
-  td:nth-child(3)::after {
+  .table-wrap td:nth-child(2)::after,
+  .table-wrap td:nth-child(3)::after {
     content: ", ";
   }
 
-  td:nth-child(4)::after {
+  .table-wrap td:nth-child(4)::after {
     content: " passages";
   }
 
-  td.actions {
+  .table-wrap td.actions {
     display: block;
     margin-top: 6px;
     text-align: left;

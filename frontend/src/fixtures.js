@@ -1,7 +1,18 @@
 // Shared test data: the shape POST /api/chat returns.
 const sec = (status, content = "", citations = []) => ({ status, content, citations });
 
+const NA = "not_applicable";
+
+/** A follow-up or quick question: only the lead answer is used, every section is not_applicable. */
+export const chatFixture = (content = "Sea takes **14 to 20** days.", over = {}) => ({
+  ...answerFixture(),
+  answer: sec("ok", content, ["S1"]),
+  sections: Object.fromEntries(Object.keys(answerFixture().sections).map((k) => [k, sec(NA)])),
+  ...over,
+});
+
 export const answerFixture = (over = {}) => ({
+  answer: sec(NA),
   sections: {
     hs_code: sec("ok", "6109 10 for knitted cotton T-shirts.", ["S1"]),
     dgft_schemes: sec("ok", "- EPCG\n- RoDTEP", ["S2"]),

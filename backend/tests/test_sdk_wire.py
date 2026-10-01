@@ -51,7 +51,7 @@ def test_request_carries_schema_and_response_parses_into_answer():
 @pytest.mark.parametrize("text", ["", "{}"])
 def test_refusal_from_the_wire_gives_a_safe_answer(text):
     out = answer("q", [], HITS, sdk_client(text, stop_reason="refusal"), "anthropic.claude-sonnet-5-5")
-    assert {s["status"] for s in out["sections"].values()} == {"no_data"} and out["disclaimer"]
+    assert out["answer"]["status"] == "no_data" and out["disclaimer"]
 
 
 @pytest.mark.parametrize("stop_reason, text", [

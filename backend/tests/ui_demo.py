@@ -37,14 +37,22 @@ class _Claude:
         q = kw["messages"][0]["content"].rsplit("Question:", 1)[1].strip().lower()
         c = lambda *cats: [s[k] for k in cats if k in s]  # noqa: E731
         na = Section(status="not_applicable", content="", citations=[])
-        if "port" in q and "wait" in q:  # a question that touches only one section
-            ans = Answer(hs_code=na, dgft_schemes=na, incentives=na, benefit_estimate=na, compliance_checklist=na,
+        if "what about" in q:  # a follow-up: a plain chat reply, no docket
+            ans = Answer(answer=Section(status="ok", citations=c("freight"), content=(
+                "By **sea** it takes **14 to 20 days** door to port, and costs **3,500 to 5,000 per CBM** (LCL).\n"
+                "For 1200 kg of garments expect about **6 to 8 CBM**, so roughly **21,000 to 40,000** in total.")),
+                         hs_code=na, dgft_schemes=na, incentives=na, benefit_estimate=na, compliance_checklist=na,
+                         freight_and_port=na, follow_up_question="")
+        elif "port" in q and "wait" in q:  # a question that touches only one section
+            ans = Answer(answer=na, hs_code=na, dgft_schemes=na, incentives=na, benefit_estimate=na, compliance_checklist=na,
                          freight_and_port=Section(status="ok", citations=c("port"), content=(
                              "Bulk cargo queues for a designated berth.\n- Mundra: 2 to 4 days\n- Deendayal (Kandla): "
                              "3 to 6 days\n- Nhava Sheva: 2 to 3 days for break-bulk\nAdd 1 to 2 days in the monsoon months.")),
                          follow_up_question="Which port will the shipment leave from?")
         else:
             ans = Answer(
+                answer=Section(status="ok", citations=c("hs_code"), content=(
+                    "Classify as **6109 10** and claim **RoDTEP at 1.0% of FOB**.")),
                 hs_code=Section(status="ok", citations=c("hs_code"), content=(
                     "6109 10 (ITC-HS 61091000): T-shirts, singlets and other vests, knitted or crocheted, of cotton.\n"
                     "Knitted construction and cotton as the main fibre decide the heading. Woven shirts would fall under 6205.")),

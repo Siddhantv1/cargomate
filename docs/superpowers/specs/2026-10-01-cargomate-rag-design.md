@@ -34,8 +34,11 @@ knowledge base without a full rebuild. Prototype quality, built so real document
 ## Answer contract
 Sections: `hs_code`, `dgft_schemes`, `incentives`, `benefit_estimate`, `compliance_checklist`, `freight_and_port`.
 Each: `{status: ok|no_data|not_applicable, content, citations[]}`, plus `follow_up_question`.
+A lead field `answer` (same shape) carries replies to follow-ups and quick questions, or a one-line bottom line above
+the sections. When no section applies the UI shows `answer` as a plain chat reply, otherwise the docket. Content is
+markdown; the UI renders bold, lists and tables only (no links, images or HTML).
 Server rules, independent of the model:
-- No retrieved chunks: no model call, every section `no_data`.
+- No retrieved chunks: no model call, a single `no_data` answer (sections not_applicable).
 - Citations not in the retrieved set are dropped; an `ok` section left with no citation becomes `no_data`.
 - The disclaimer is appended by the server.
 - Source text is treated as data, never as instructions.

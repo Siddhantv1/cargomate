@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from app.chat import SECTIONS, Answer, Section
+from app.chat import FIELDS, Answer, Section
 from app.store import Store
 
 
@@ -35,8 +35,8 @@ class FakeClaude:
 
 
 def make_answer(**over):
-    """All sections not_applicable unless overridden: make_answer(hs_code=("ok", "6109", ["S1"]))."""
-    secs = {s: Section(status="not_applicable", content="", citations=[]) for s in SECTIONS}
+    """Every field not_applicable unless overridden: make_answer(hs_code=("ok", "6109", ["S1"])) or answer=(...)."""
+    secs = {s: Section(status="not_applicable", content="", citations=[]) for s in FIELDS}
     follow = over.pop("follow_up_question", "")
     for k, (status, content, cites) in over.items():
         secs[k] = Section(status=status, content=content, citations=cites)

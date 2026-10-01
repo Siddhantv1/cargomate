@@ -32,7 +32,7 @@ def test_upload_chat_reupload_delete_round_trip(store, embed):
     assert c.delete("/api/documents/hs.csv", headers=H).status_code == 200
     assert c.delete("/api/documents/hs.csv", headers=H).status_code == 404
     gone = c.post("/api/chat", json={"message": "cotton knitted t-shirts"}).json()
-    assert gone["sections"]["hs_code"]["status"] == "no_data"
+    assert gone["answer"]["status"] == "no_data"
 
 
 @pytest.mark.parametrize("headers", [{}, {"X-Admin-Token": "wrong"}])
